@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "简单易用的在线图片编辑工具",
   "scripts": {
-    "build": "mkdir -p dist && cp index.html dist/ && cp style.css dist/ && cp script.js dist/ && cp -r images dist/ 2>/dev/null || true"
+    "build": "mkdir -p dist && copy index.html dist\\ && copy style.css dist\\ && copy script.js dist\\ && xcopy /E /I images dist\\images 2>nul || true",
+    "dev": "echo '请直接在浏览器中打开 index.html 进行开发' && start index.html"
   },
   "keywords": ["图片编辑", "在线工具"],
   "author": "大宝",
