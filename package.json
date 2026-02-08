@@ -1,0 +1,11 @@
+{
+  "name": "cc-image-editor",
+  "version": "1.0.0",
+  "description": "简单易用的在线图片编辑工具",
+  "scripts": {
+    "build": "mkdir -p dist && cp index.html dist/ && cp style.css dist/ && cp script.js dist/ && cp -r images dist/ 2>/dev/null || true"
+  },
+  "keywords": ["图片编辑", "在线工具"],
+  "author": "大宝",
+  "license": "MIT"
+}

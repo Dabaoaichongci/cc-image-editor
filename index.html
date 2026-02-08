@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片编辑工具</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 头部导航 -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon">📸</div>
+                    <div class="logo-text">
+                        <h1>图片编辑工具</h1>
+                        <p>简单易用的本地图片编辑解决方案</p>
+                    </div>
+                </div>
+                <div class="header-stats" id="headerStats">
+                    <span class="stats-item">已上传: <strong id="uploadCount">0</strong>张</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main class="app-main">
+            <!-- 左侧控制面板 -->
+            <aside class="control-panel">
+                <!-- 上传区域 -->
+                <section class="upload-module module">
+                    <h2 class="module-title">
+                        <span class="title-icon">📁</span>
+                        图片上传
+                    </h2>
+                    <div class="upload-area" id="uploadArea">
+                        <input type="file" id="fileInput" accept="image/*" multiple>
+                        <div class="upload-content">
+                            <div class="upload-icon">📸</div>
+                            <p>点击选择图片或拖拽图片到此处</p>
+                            <p class="upload-hint">支持单张或批量上传（最多50张）</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 图片列表 -->
+                <section class="image-list-module module" id="imageListSection">
+                    <h2 class="module-title">
+                        <span class="title-icon">🖼️</span>
+                        已上传图片
+                        <span class="image-count" id="imageCount">0</span>
+                    </h2>
+                    <div class="image-list" id="imageList"></div>
+                </section>
+
+                <!-- 场景模板 -->
+                <section class="template-module module">
+                    <h2 class="module-title">
+                        <span class="title-icon">🎨</span>
+                        场景模板
+                    </h2>
+                    <div class="template-grid">
+                        <div class="template-item" data-width="1080" data-height="1920" title="手机壁纸">
+                            <span class="template-name">手机壁纸</span>
+                            <span class="template-ratio">9:16</span>
+                        </div>
+                        <div class="template-item" data-width="1920" data-height="1080" title="桌面壁纸">
+                            <span class="template-name">桌面壁纸</span>
+                            <span class="template-ratio">16:9</span>
+                        </div>
+                        <div class="template-item" data-width="1080" data-height="1080" title="社交媒体">
+                            <span class="template-name">社交媒体</span>
+                            <span class="template-ratio">1:1</span>
+                        </div>
+                        <div class="template-item" data-width="1200" data-height="628" title="博客封面">
+                            <span class="template-name">博客封面</span>
+                            <span class="template-ratio">1.91:1</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 尺寸调整 -->
+                <section class="size-module module">
+                    <h2 class="module-title">
+                        <span class="title-icon">📏</span>
+                        尺寸调整
+                    </h2>
+                    <div class="size-controls">
+                        <div class="size-input-group">
+                            <div class="size-input">
+                                <label for="widthInput">宽度:</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="widthInput" min="1" max="5000" value="800">
+                                    <span class="unit">px</span>
+                                </div>
+                            </div>
+                            <div class="size-input">
+                                <label for="heightInput">高度:</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="heightInput" min="1" max="5000" value="600">
+                                    <span class="unit">px</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="aspect-control">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="keepRatio" checked>
+                                <span class="checkbox-custom"></span>
+                                保持比例
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 裁剪控制 -->
+                <section class="crop-controls-module module">
+                    <h2 class="module-title">
+                        <span class="title-icon">✂️</span>
+                        裁剪控制
+                    </h2>
+                    <div class="crop-controls">
+                        <button id="rotateLeft" class="control-btn rotate-left" title="左旋转90度">
+                            <span class="btn-icon">↺</span>
+                            左旋转
+                        </button>
+                        <button id="rotateRight" class="control-btn rotate-right" title="右旋转90度">
+                            <span class="btn-icon">↻</span>
+                            右旋转
+                        </button>
+                        <button id="flipHorizontal" class="control-btn flip-horizontal" title="水平翻转">
+                            <span class="btn-icon">←→</span>
+                            水平翻转
+                        </button>
+                        <button id="flipVertical" class="control-btn flip-vertical" title="垂直翻转">
+                            <span class="btn-icon">↑↓</span>
+                            垂直翻转
+                        </button>
+                        <button id="resetCrop" class="control-btn reset-crop" title="重置裁剪">
+                            <span class="btn-icon">🔄</span>
+                            重置裁剪
+                        </button>
+                    </div>
+                </section>
+
+                <!-- 导出按钮 -->
+                <section class="export-module module">
+                    <h2 class="module-title">
+                        <span class="title-icon">💾</span>
+                        导出图片
+                    </h2>
+                    <div class="export-controls">
+                        <button id="exportSingle" class="btn-primary export-btn single-export" title="导出当前图片">
+                            <span class="btn-icon">📥</span>
+                            导出当前图片
+                        </button>
+                        <button id="exportBatch" class="btn-secondary export-btn batch-export" title="批量导出所有图片">
+                            <span class="btn-icon">📦</span>
+                            批量导出
+                        </button>
+                    </div>
+                </section>
+            </aside>
+
+            <!-- 右侧编辑区域 -->
+            <section class="edit-panel" id="editPanel">
+                <div class="edit-container">
+                    <div class="edit-header">
+                        <h2 class="edit-title">图片编辑区</h2>
+                        <div class="edit-status" id="editStatus">
+                            <span class="status-text">请先选择一张图片开始编辑</span>
+                        </div>
+                    </div>
+                    <div class="crop-container">
+                        <img id="editImage" src="" alt="待编辑图片">
+                        <div id="cropperContainer"></div>
+                    </div>
+                    <div class="edit-info" id="editInfo">
+                        <div class="info-item">
+                            <label>原始尺寸:</label>
+                            <span id="originalSize">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>当前尺寸:</label>
+                            <span id="currentSize">-</span>
+                        </div>
+                        <div class="info-item">
+                            <label>文件格式:</label>
+                            <span id="fileFormat">-</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 底部信息 -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <p>本地图片编辑工具 - 所有操作均在浏览器中完成，保护您的隐私</p>
+                <div class="footer-links">
+                    <a href="#" class="footer-link">使用帮助</a>
+                    <a href="#" class="footer-link">关于工具</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 加载动画 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>正在处理图片...</p>
+        </div>
+    </div>
+
+    <!-- 提示消息 -->
+    <div class="toast" id="toast">
+        <div class="toast-content">
+            <span class="toast-icon" id="toastIcon">✅</span>
+            <span class="toast-text" id="toastText">操作成功</span>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
